@@ -25,6 +25,8 @@ func (parse *Parse) Run() {
 
 // $request_length $body_bytes_sent $bytes_sent $upstream_connect_time $upstream_response_time $upstream_header_time $upstream_response_length
 func (parse *Parse) process() {
+	reader := gonx.NewParser(config.Conf.Parse.LogFormat)
+
 	for {
 		if msg, ok := <-parse.Channel; ok {
 			data := strings.TrimSpace(string(msg))
@@ -42,8 +44,6 @@ func (parse *Parse) process() {
 			}
 
 			metrics.HTTPRequestTotal.WithLabelValues("http").Inc()
-
-			reader := gonx.NewParser(config.Conf.Parse.LogFormat)
 			entry, err := reader.ParseString(data[idxCutToFirst:])
 
 			if err != nil {
