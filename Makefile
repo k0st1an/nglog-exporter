@@ -1,10 +1,7 @@
-build:
-	go install ./
-
 linux:
-	GOOS=linux GOARCH=amd64 go build -o nglog-exporter ./
+	GOOS=linux GOARCH=amd64 go build -o nglog-exporter-linux-amd64 ./
 
-macos:
-	GOOS=darwin GOARCH=amd64 go build -o nglog-exporter ./
+darwin:
+	GOOS=darwin GOARCH=amd64 go build -o nglog-exporter-darwin-amd64 ./
 
-.PHONY: build linux macos
+.PHONY: linux darwin
