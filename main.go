@@ -33,6 +33,8 @@ func init() {
 		metrics.RequestTimeHist,
 		metrics.UpstreamStatusTotal,
 		metrics.UpstreamConnectTimeHist,
+		metrics.UpstreamResposeTimeHist,
+		metrics.UpstreamHeaderTimeHist,
 	)
 }
 
