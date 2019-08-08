@@ -23,7 +23,7 @@ func (parse *Parse) Run() {
 	}
 }
 
-// $request_length $body_bytes_sent $bytes_sent $upstream_connect_time $upstream_response_time $upstream_header_time $upstream_response_length
+// $request_length $body_bytes_sent $bytes_sent $upstream_response_length
 func (parse *Parse) process() {
 	reader := gonx.NewParser(config.Conf.Parse.LogFormat)
 
@@ -68,6 +68,18 @@ func (parse *Parse) process() {
 			if strVal, err := entry.Field("upstream_connect_time"); err == nil {
 				if val, ok := strToFloat64(strVal); ok {
 					metrics.UpstreamConnectTimeHist.WithLabelValues().Observe(val)
+				}
+			}
+
+			if strVal, err := entry.Field("upstream_response_time"); err == nil {
+				if val, ok := strToFloat64(strVal); ok {
+					metrics.UpstreamResposeTimeHist.WithLabelValues().Observe(val)
+				}
+			}
+
+			if strVal, err := entry.Field("upstream_header_time"); err == nil {
+				if val, ok := strToFloat64(strVal); ok {
+					metrics.UpstreamHeaderTimeHist.WithLabelValues().Observe(val)
 				}
 			}
 		}

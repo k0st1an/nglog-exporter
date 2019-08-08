@@ -33,3 +33,15 @@ var UpstreamConnectTimeHist = prometheus.NewHistogramVec(prometheus.HistogramOpt
 	Name:    "nglog_upstream_connect_time_hist",
 	Buckets: []float64{.005, .01, .025, .05, .1, .25, .5, 1, 2.5, 5, 10},
 }, []string{})
+
+// UpstreamResposeTimeHist ...
+var UpstreamResposeTimeHist = prometheus.NewHistogramVec(prometheus.HistogramOpts{
+	Name:    "nglog_upstream_response_time_hist",
+	Buckets: []float64{.005, .01, .025, .05, .1, .25, .5, 1, 2.5, 5, 10},
+}, []string{})
+
+// UpstreamHeaderTimeHist ...
+var UpstreamHeaderTimeHist = prometheus.NewHistogramVec(prometheus.HistogramOpts{
+	Name:    "nglog_upstream_header_time_hist",
+	Buckets: []float64{.005, .01, .025, .05, .1, .25, .5, 1, 2.5, 5, 10},
+}, []string{})
