@@ -4,7 +4,6 @@ import (
 	"flag"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/k0st1an/nglog-exporter/config"
 	"github.com/k0st1an/nglog-exporter/metrics"
@@ -20,7 +19,7 @@ func init() {
 
 	flag.BoolVar(&config.Conf.Debug, "debug", false, "debug mode")
 	flag.IntVar(&config.Conf.UDPSrv.Port, "udp-server-port", 8888, "port of UDP server")
-	flag.IntVar(&config.Conf.UDPSrv.ReadBuf, "udp-server-read-buf", os.Getpagesize(), "buffer for read from UDP socket")
+	flag.IntVar(&config.Conf.UDPSrv.ReadBuf, "udp-server-in-buf", 524288, "size the buffer incoming data of UDP server")
 	flag.StringVar(&config.Conf.Parse.CutToFirst, "cut-to-first", "_", "to cut to the first character")
 	flag.StringVar(&config.Conf.Parse.LogFormat, "log-format", "_$status $request_length $request_time $body_bytes_sent $bytes_sent $upstream_status $upstream_connect_time $upstream_response_time $upstream_header_time $upstream_response_length", "log_format from nginx")
 	flag.StringVar(&config.Conf.WebMetricsAddr, "web-metrics-addr", ":9999", "bind to address of metrics server")
@@ -41,7 +40,7 @@ func main() {
 	var parseLog parselog.Parse
 	var udpSrv udpsrv.UDPSrv
 
-	parseLog.Channel = make(chan []byte, config.Conf.Parse.Workers)
+	parseLog.Channel = make(chan []byte, 4096)
 	parseLog.Run()
 
 	udpSrv.Channel = parseLog.Channel
