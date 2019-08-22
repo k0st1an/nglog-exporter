@@ -15,7 +15,7 @@ var HTTPRequestTotal = prometheus.NewCounterVec(prometheus.CounterOpts{
 // StatusTotal ...
 var StatusTotal = prometheus.NewCounterVec(prometheus.CounterOpts{
 	Name: "nglog_status_total",
-}, []string{"code"})
+}, []string{"code", "host"})
 
 // RequestTimeHist ...
 var RequestTimeHist = prometheus.NewHistogramVec(prometheus.HistogramOpts{
@@ -26,7 +26,7 @@ var RequestTimeHist = prometheus.NewHistogramVec(prometheus.HistogramOpts{
 // UpstreamStatusTotal ...
 var UpstreamStatusTotal = prometheus.NewCounterVec(prometheus.CounterOpts{
 	Name: "nglog_upstream_status_total",
-}, []string{"code"})
+}, []string{"code", "host"})
 
 // UpstreamConnectTimeHist ...
 var UpstreamConnectTimeHist = prometheus.NewHistogramVec(prometheus.HistogramOpts{

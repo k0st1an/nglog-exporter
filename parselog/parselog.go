@@ -51,8 +51,10 @@ func (parse *Parse) process() {
 				continue
 			}
 
-			if val, err := entry.Field("status"); err == nil {
-				metrics.StatusTotal.WithLabelValues(val).Inc()
+			if val1l, err := entry.Field("status"); err == nil {
+				if val2l, err := entry.Field("host"); err == nil {
+					metrics.StatusTotal.WithLabelValues(val1l, val2l).Inc()
+				}
 			}
 
 			if strVal, err := entry.Field("request_time"); err == nil {
@@ -61,8 +63,10 @@ func (parse *Parse) process() {
 				}
 			}
 
-			if val, err := entry.Field("upstream_status"); err == nil {
-				metrics.UpstreamStatusTotal.WithLabelValues(val).Inc()
+			if val1l, err := entry.Field("upstream_status"); err == nil {
+				if val2l, err := entry.Field("host"); err == nil {
+					metrics.UpstreamStatusTotal.WithLabelValues(val1l, val2l).Inc()
+				}
 			}
 
 			if strVal, err := entry.Field("upstream_connect_time"); err == nil {
