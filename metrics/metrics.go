@@ -10,7 +10,7 @@ var ParseErrorTotal = prometheus.NewCounter(prometheus.CounterOpts{
 // HTTPRequestTotal ...
 var HTTPRequestTotal = prometheus.NewCounterVec(prometheus.CounterOpts{
 	Name: "nglog_http_requests_total",
-}, []string{"method"})
+}, []string{"method", "scheme"})
 
 // StatusTotal ...
 var StatusTotal = prometheus.NewCounterVec(prometheus.CounterOpts{

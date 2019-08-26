@@ -49,8 +49,10 @@ func (parse *Parse) process() {
 				continue
 			}
 
-			if val, err := entry.Field("request_method"); err == nil {
-				metrics.HTTPRequestTotal.WithLabelValues(val).Inc()
+			if val1l, err := entry.Field("request_method"); err == nil {
+				if val2l, err := entry.Field("scheme"); err == nil {
+					metrics.HTTPRequestTotal.WithLabelValues(val1l, val2l).Inc()
+				}
 			}
 
 			if val1l, err := entry.Field("status"); err == nil {
