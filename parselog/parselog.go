@@ -43,12 +43,14 @@ func (parse *Parse) process() {
 				continue
 			}
 
-			metrics.HTTPRequestTotal.WithLabelValues("http").Inc()
 			entry, err := reader.ParseString(data[idxCutToFirst:])
-
 			if err != nil {
 				metrics.ParseErrorTotal.Inc()
 				continue
+			}
+
+			if val, err := entry.Field("request_method"); err == nil {
+				metrics.HTTPRequestTotal.WithLabelValues(val).Inc()
 			}
 
 			if val1l, err := entry.Field("status"); err == nil {
