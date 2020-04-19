@@ -29,7 +29,7 @@ func (parse *Parse) process() {
 
 	for {
 		if msg, ok := <-parse.Channel; ok {
-			data := strings.TrimSpace(string(msg))
+			data := string(msg)
 			idxCutToFirst := strings.Index(data, config.Conf.Parse.CutToFirst)
 
 			if config.Conf.Debug {

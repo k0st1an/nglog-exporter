@@ -24,6 +24,7 @@ func (ngLog *UDPSrv) Run() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer ngLog.Conn.Close()
 
 	err = ngLog.Conn.SetReadBuffer(config.Conf.UDPSrv.ReadBuf)
 	if err != nil {
@@ -32,12 +33,9 @@ func (ngLog *UDPSrv) Run() {
 
 	log.Printf("UDP server started on address %s\n", ngLog.Conn.LocalAddr().String())
 
-	go ngLog.read()
-}
+	msgBuf := make([]byte, 124)
 
-func (ngLog *UDPSrv) read() {
 	for {
-		msgBuf := make([]byte, 124)
 		rlen, _, err := ngLog.Conn.ReadFromUDP(msgBuf)
 
 		if err != nil {
@@ -49,10 +47,4 @@ func (ngLog *UDPSrv) read() {
 			ngLog.Channel <- msgBuf[:rlen]
 		}
 	}
-}
-
-// Stop ...
-func (ngLog *UDPSrv) Stop() {
-	ngLog.Conn.Close()
-	log.Print("UDP server stopped")
 }

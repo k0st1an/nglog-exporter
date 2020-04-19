@@ -47,7 +47,6 @@ func main() {
 
 	udpSrv.Channel = parseLog.Channel
 	go udpSrv.Run()
-	defer udpSrv.Stop()
 
 	log.Print("Metrics endpoint: /metrics")
 	http.Handle("/metrics", promhttp.Handler())
