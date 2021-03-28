@@ -5,50 +5,53 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/k0st1an/nglog-exporter/config"
-	"github.com/k0st1an/nglog-exporter/metrics"
-	"github.com/k0st1an/nglog-exporter/parselog"
-	"github.com/k0st1an/nglog-exporter/udpsrv"
-
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-func init() {
-	log.SetFlags(log.Ldate | log.Lmicroseconds | log.Lshortfile)
-
-	flag.BoolVar(&config.Conf.Debug, "debug", false, "debug mode")
-	flag.IntVar(&config.Conf.UDPSrv.Port, "udp-server-port", 8888, "port of UDP server")
-	flag.IntVar(&config.Conf.UDPSrv.ReadBuf, "udp-server-in-buf", 524288, "size the buffer incoming data of UDP server")
-	flag.StringVar(&config.Conf.Parse.CutToFirst, "cut-to-first", "_", "to cut to the first character")
-	flag.StringVar(&config.Conf.Parse.LogFormat, "log-format", "_$host $request_method $scheme $status $request_length $request_time $body_bytes_sent $bytes_sent $upstream_status $upstream_connect_time $upstream_response_time $upstream_header_time $upstream_response_length", "log_format from nginx")
-	flag.StringVar(&config.Conf.WebMetricsAddr, "web-metrics-addr", ":9999", "bind to address of metrics server")
-	flag.IntVar(&config.Conf.Parse.Workers, "workers", 5, "workers for process log")
-	flag.Parse()
-
-	prometheus.MustRegister(
-		metrics.ParseErrorTotal,
-		metrics.HTTPRequestTotal,
-		metrics.StatusTotal,
-		metrics.RequestTimeHist,
-		metrics.UpstreamStatusTotal,
-		metrics.UpstreamConnectTimeHist,
-		metrics.UpstreamResposeTimeHist,
-		metrics.UpstreamHeaderTimeHist,
-	)
-}
+var logsChannel chan []byte
 
 func main() {
-	var parseLog parselog.Parse
-	var udpSrv udpsrv.UDPSrv
+	log.SetFlags(log.Ldate | log.Lmicroseconds | log.Lshortfile)
 
-	parseLog.Channel = make(chan []byte, 4096)
-	parseLog.Run()
+	flag.BoolVar(&conf.PrintRawNginxLogs, "r", false, "print RAW nginx logs")
+	flag.BoolVar(&conf.PrintNginxLogs, "v", false, "print nginx logs")
+	flag.BoolVar(&conf.PrintErrors, "e", false, "print errors")
+	flag.StringVar(&conf.UDPSrv.Addr, "u", "127.0.0.1:8888", "bind to address of UDP server")
+	flag.IntVar(&conf.UDPSrv.ReadBuf, "b", 524288, "size the buffer incoming data of UDP server")
+	flag.StringVar(&conf.WebMetricsAddr, "m", ":9999", "bind to address of metrics server")
+	flag.IntVar(&conf.Parse.Workers, "w", 5, "workers for process logs")
+	flag.IntVar(&conf.QueueSize, "q", 4096, "queue size of input logs")
+	flag.Parse()
 
-	udpSrv.Channel = parseLog.Channel
-	go udpSrv.Run()
+	log.Println("Print RAW nginx logs:", conf.PrintRawNginxLogs)
+	log.Println("Print nginx logs:", conf.PrintNginxLogs)
+	log.Println("Print error:", conf.PrintErrors)
+	log.Println("Queue size:", conf.QueueSize)
+	log.Println("Workers for parsing logs:", conf.Parse.Workers)
+	log.Println("Buffer size:", conf.UDPSrv.ReadBuf)
+
+	prometheus.MustRegister(
+		parseErrorTotal,
+		statusTotal,
+		requestsTotal,
+		requestTimeHist,
+		upstreamStatusTotal,
+		upstreamConnectTimeHist,
+		upstreamResposeTimeHist,
+		ngLogQueue,
+	)
+
+	logsChannel = make(chan []byte, conf.QueueSize)
+
+	for i := 0; i < conf.Parse.Workers; i++ {
+		go logsProcess()
+	}
+
+	go internalMetricsProcess()
+	go udpServer()
 
 	log.Print("Metrics endpoint: /metrics")
 	http.Handle("/metrics", promhttp.Handler())
-	log.Fatal(http.ListenAndServe(config.Conf.WebMetricsAddr, nil))
+	log.Fatal(http.ListenAndServe(conf.WebMetricsAddr, nil))
 }

@@ -1,6 +1,12 @@
 # nglog-exporter
 
 ```
+log_format nglog_json '{"scheme":"$scheme","status":"$status","request_time":"$request_time","upstream_status":"$upstream_status","upstream_connect_time":"$upstream_connect_time","upstream_response_time":"$upstream_response_time"}';
+
+access_log syslog:server=127.0.0.1:8888,nohostname,tag= nglog_json;
+```
+
+```
 $ curl -s http://localhost:9999/metrics | grep ^nglog
 nglog_http_requests_total{method="http"} 4.121157e+06
 nglog_parse_errors_total 0
