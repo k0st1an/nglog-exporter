@@ -37,7 +37,11 @@ func workers(srv *net.UDPConn, exit chan struct{}) {
 		l, _, err = srv.ReadFromUDP(buf)
 
 		if err != nil {
-			log.Print(err)
+			errorsReadFromUDPTotal.Inc()
+
+			if conf.PrintErrors {
+				log.Print("UDP:", err.Error())
+			}
 			continue
 		}
 

@@ -2,6 +2,10 @@ package main
 
 import "github.com/prometheus/client_golang/prometheus"
 
+var errorsReadFromUDPTotal = prometheus.NewCounter(prometheus.CounterOpts{
+	Name: "nglog_errors_read_from_udp_total",
+})
+
 var parseErrorTotal = prometheus.NewCounter(prometheus.CounterOpts{
 	Name: "nglog_parse_errors_total",
 })

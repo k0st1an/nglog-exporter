@@ -23,14 +23,15 @@ func main() {
 	flag.Parse()
 
 	prometheus.MustRegister(
-		parseErrorTotal,
+		ngLogQueue,
 		statusTotal,
 		requestsTotal,
 		requestTimeHist,
+		parseErrorTotal,
 		upstreamStatusTotal,
+		errorsReadFromUDPTotal,
 		upstreamConnectTimeHist,
 		upstreamResposeTimeHist,
-		ngLogQueue,
 	)
 
 	logs = make(chan []byte, conf.QueueSize)
