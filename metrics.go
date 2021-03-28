@@ -6,8 +6,8 @@ var errorsReadFromUDPTotal = prometheus.NewCounter(prometheus.CounterOpts{
 	Name: "nglog_errors_read_from_udp_total",
 })
 
-var parseErrorTotal = prometheus.NewCounter(prometheus.CounterOpts{
-	Name: "nglog_parse_errors_total",
+var errorsParseTotal = prometheus.NewCounter(prometheus.CounterOpts{
+	Name: "nglog_errors_parse_total",
 })
 
 var requestsTotal = prometheus.NewCounterVec(prometheus.CounterOpts{

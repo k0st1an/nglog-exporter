@@ -27,7 +27,7 @@ func main() {
 		statusTotal,
 		requestsTotal,
 		requestTimeHist,
-		parseErrorTotal,
+		errorsParseTotal,
 		upstreamStatusTotal,
 		errorsReadFromUDPTotal,
 		upstreamConnectTimeHist,

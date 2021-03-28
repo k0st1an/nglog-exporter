@@ -33,7 +33,7 @@ func logsProcess() {
 				fmt.Println("JSON log:", string(jsonLog))
 				fmt.Println("Error:", err.Error())
 			}
-			parseErrorTotal.Inc()
+			errorsParseTotal.Inc()
 			continue
 		}
 
