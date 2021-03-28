@@ -15,7 +15,6 @@ var logs chan []byte
 func main() {
 	log.SetFlags(log.Ldate | log.Lmicroseconds | log.Lshortfile)
 
-	flag.BoolVar(&conf.PrintRawNginxLogs, "r", false, "print RAW nginx logs")
 	flag.BoolVar(&conf.PrintNginxLogs, "v", false, "print nginx logs")
 	flag.BoolVar(&conf.PrintErrors, "e", false, "print errors")
 	flag.StringVar(&conf.UDPSrv.Addr, "u", "127.0.0.1:8888", "bind to address of UDP server")

@@ -24,14 +24,14 @@ func logsProcess() {
 		// `<190>Apr 19 18:52:39 : {"scheme":...` > `{"scheme":...`
 		jsonLog := raw[23:]
 		if conf.PrintNginxLogs {
-			fmt.Println("RAW:", string(jsonLog))
+			fmt.Println("RAW log:", string(jsonLog))
 		}
 
 		if err := json.Unmarshal(jsonLog, &nl); err != nil {
 			if conf.PrintErrors {
-				fmt.Println("raw:", string(raw))
-				fmt.Println("json log:", string(jsonLog))
-				fmt.Println("error:", err.Error())
+				fmt.Println("RAW log:", string(raw))
+				fmt.Println("JSON log:", string(jsonLog))
+				fmt.Println("Error:", err.Error())
 			}
 			parseErrorTotal.Inc()
 			continue
