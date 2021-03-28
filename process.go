@@ -22,15 +22,15 @@ func logsProcess() {
 
 	for raw := range logs {
 		// `<190>Apr 19 18:52:39 : {"scheme":...` > `{"scheme":...`
-		raw2 := raw[23:]
+		jsonLog := raw[23:]
 		if conf.PrintNginxLogs {
-			fmt.Println("RAW:", string(raw2))
+			fmt.Println("RAW:", string(jsonLog))
 		}
 
-		if err := json.Unmarshal(raw2, &nl); err != nil {
+		if err := json.Unmarshal(jsonLog, &nl); err != nil {
 			if conf.PrintErrors {
 				fmt.Println("raw:", string(raw))
-				fmt.Println("raw2:", string(raw2))
+				fmt.Println("json log:", string(jsonLog))
 				fmt.Println("error:", err.Error())
 			}
 			parseErrorTotal.Inc()
