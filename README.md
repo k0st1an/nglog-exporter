@@ -1,7 +1,7 @@
 # nglog-exporter
 
 ```
-log_format nglog_json '{"scheme":"$scheme","status":"$status","request_time":"$request_time","upstream_status":"$upstream_status","upstream_connect_time":"$upstream_connect_time","upstream_response_time":"$upstream_response_time"}';
+log_format nglog_json escape=json '{"scheme":"$scheme","status":"$status","request_time":"$request_time","upstream_status":"$upstream_status","upstream_connect_time":"$upstream_connect_time","upstream_response_time":"$upstream_response_time"}';
 
 access_log syslog:server=127.0.0.1:8888,nohostname,tag= nglog_json;
 ```

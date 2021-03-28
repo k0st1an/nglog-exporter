@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net"
+	"runtime"
 )
 
 func udpServer() {
@@ -15,27 +16,35 @@ func udpServer() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer srv.Close()
 
-	if err := srv.SetReadBuffer(conf.UDPSrv.ReadBuf); err != nil {
-		log.Fatal(err)
+	defer srv.Close()
+	exit := make(chan struct{})
+
+	for i := 0; i < runtime.NumCPU(); i++ {
+		go workers(srv, exit)
 	}
 
-	log.Printf("UDP server started on address %s\n", conf.UDPSrv.Addr)
+	<-exit
+}
+
+//
+func workers(srv *net.UDPConn, exit chan struct{}) {
+	l := 0
+	err := error(nil)
 	buf := make([]byte, 512)
 
-	for {
-		rlen, _, err := srv.ReadFromUDP(buf)
+	for err == nil {
+		l, _, err = srv.ReadFromUDP(buf)
 
 		if err != nil {
 			log.Print(err)
 			continue
 		}
 
-		if rlen > 0 {
-			// <190>Apr 19 18:52:39 : {"host":... > {"host":...
-			// logsChannel <- buf[23:rlen]
-			logsChannel <- buf[:rlen]
+		if l > 0 {
+			logs <- buf[:l]
 		}
 	}
+
+	exit <- struct{}{}
 }

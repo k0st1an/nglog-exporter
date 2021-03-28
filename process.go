@@ -20,7 +20,8 @@ func logsProcess() {
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	var nl nginxLog
 
-	for raw := range logsChannel {
+	for raw := range logs {
+		// `<190>Apr 19 18:52:39 : {"scheme":...` > `{"scheme":...`
 		raw2 := raw[23:]
 		if conf.PrintNginxLogs {
 			fmt.Println("RAW:", string(raw2))
@@ -66,7 +67,7 @@ func strToFloat64(str string) (float64, bool) {
 
 func internalMetricsProcess() {
 	for {
-		ngLogQueue.Set(float64(len(logsChannel)))
+		ngLogQueue.Set(float64(len(logs)))
 		time.Sleep(time.Second * 1)
 	}
 }

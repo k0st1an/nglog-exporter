@@ -7,11 +7,7 @@ type config struct {
 	WebMetricsAddr    string
 	QueueSize         int
 	UDPSrv            struct {
-		Addr    string
-		ReadBuf int
-	}
-	Parse struct {
-		Workers int
+		Addr string
 	}
 }
 
