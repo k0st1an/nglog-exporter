@@ -1,6 +1,7 @@
 package main
 
 type config struct {
+	PrintVersion   bool
 	PrintNginxLogs bool
 	PrintErrors    bool
 	UDPServerAddr  string
