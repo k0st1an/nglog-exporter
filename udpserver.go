@@ -7,7 +7,7 @@ import (
 )
 
 func udpServer() {
-	addr, err := net.ResolveUDPAddr("udp", conf.UDPSrv.Addr)
+	addr, err := net.ResolveUDPAddr("udp", conf.UDPServerAddr)
 	if err != nil {
 		log.Fatal(err)
 	}

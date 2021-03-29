@@ -17,7 +17,7 @@ func main() {
 
 	flag.BoolVar(&conf.PrintNginxLogs, "v", false, "print nginx logs")
 	flag.BoolVar(&conf.PrintErrors, "e", false, "print errors")
-	flag.StringVar(&conf.UDPSrv.Addr, "u", "127.0.0.1:8888", "bind to address of UDP server")
+	flag.StringVar(&conf.UDPServerAddr, "u", "127.0.0.1:8888", "bind to address of UDP server")
 	flag.StringVar(&conf.WebMetricsAddr, "m", "127.0.0.1:9999", "bind to address of metrics server")
 	flag.IntVar(&conf.QueueSize, "q", 4096, "queue size of input logs")
 	flag.Parse()
