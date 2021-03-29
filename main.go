@@ -12,7 +12,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-const version = "2.0.0"
+const version = "2.0.1"
 
 var logs chan []byte
 
@@ -51,7 +51,7 @@ func main() {
 	}
 
 	go internalMetricsProcess()
-	udpServer()
+	go udpServer()
 
 	http.Handle("/metrics", promhttp.Handler())
 	log.Fatal(http.ListenAndServe(conf.WebMetricsAddr, nil))
