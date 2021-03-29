@@ -12,7 +12,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-const version = "2.0.1"
+const version = "2.0.2"
 
 var logs chan []byte
 
